@@ -1,0 +1,18 @@
+python3 App.py 0 100 0 "message from node 1" 2 1
+python3 App.py 1 11 0 "message from node 1" 2 0 2 4 5
+python3 App.py 2 11 0 "message from node 2" 2 1 3 4
+python3 App.py 3 11 0 "message from node 3" 2 2
+python3 App.py 4 11 0 "message from node 4" 2 1 2 6 7 8
+python3 App.py 5 11 0 "message from node 5" 2 1 7
+python3 App.py 6 11 0 "message from node 6" 2 4 9
+python3 App.py 7 11 0 "message from node 7" 2 4 5
+python3 App.py 8 11 0 "message from node 8" 2 4
+python3 App.py 9 11 0 "message from node 9" 2 6
+clear
+
+
+python3 App.py 0 30 0 1
+python3 App.py 1 30 1 0 2 3
+python3 App.py 2 30 2 1
+python3 App.py 3 30 3 1 4
+python3 App.py 4 30 4 3
