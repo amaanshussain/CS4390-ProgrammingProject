@@ -37,6 +37,8 @@ class Network:
     
     def link_state_routing(self):
         paths = self.shortest_paths(self.nodeneighbors, self.id)
+        if self.routes != paths:
+            print(f'new routing discovered for node {self.id}: ' + str(paths))
         self.routes = paths
 
     # packages message and sends to datalink

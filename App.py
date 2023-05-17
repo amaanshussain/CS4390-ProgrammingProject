@@ -110,8 +110,6 @@ while currenttime < duration:
         if currenttime % 5 == 0:
             n.n.generate_link_state_packet()
             n.n.link_state_routing()
-            print(n.n.nodeneighbors)
-            print(n.n.routes)
 
         if starttime == currenttime and id != destination and message != "":
             print(f'node {id} sending message: {message}')
