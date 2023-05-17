@@ -6,6 +6,8 @@ is designed to send and receive messages through channels in the form of a text 
 the development of this project, I utilized the cs1.utdallas.edu server to manage my project and 
 test my output. 
 
+_Note: /src is root directory_
+
 
 ## Structure
 The source code for the project is located in the src directory, which is where you will be executing 
