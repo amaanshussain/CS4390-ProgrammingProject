@@ -34,16 +34,20 @@ class Transport:
     # receive packet from network
     def transport_receive_from_network(self, message, src):
 
-        dm = DataMessage(int(message[1]), int(message[2]), int(message[3:5]), message[5:])
+        if message[0] == 'D':
+            dm = DataMessage(int(message[1]), int(message[2]), int(message[3:5]), message[5:])
 
-        try:
-            for item in self.received_messages[src]:
-                if int(message[3:5]) == item.seqno:
-                    return
-        except:
-            self.received_messages[src] = []
+            try:
+                for item in self.received_messages[src]:
+                    if int(message[3:5]) == item.seqno:
+                        return
+            except:
+                self.received_messages[src] = []
+            
+            self.received_messages[src].append(dm)
         
-        self.received_messages[src].append(dm)
+        if message[0] == 'N':
+            print(message, src)
     
     def transport_output_all_received(self):
 

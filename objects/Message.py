@@ -30,11 +30,6 @@ class DataMessage:
         self.dest = transportdest
         self.seqno = seqno
         self.data = transportmessage
-    
-dm = DataMessage()
-dm.parse_message("XX D110D0100i can50")
-print(dm.data)
-
 
 
 class NegativeAcknowledgement:

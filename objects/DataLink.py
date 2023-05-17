@@ -1,3 +1,4 @@
+from objects.Message import NegativeAcknowledgement
 
 class DataLink:
 
@@ -83,6 +84,7 @@ class DataLink:
             with open(file, 'r') as channel:
                 data = channel.read()
                 if data == "":
+                    channel.close()
                     continue
 
                 # insert read counter here
@@ -105,12 +107,15 @@ class DataLink:
                     parsed = self.verify_message(message)
 
                     if not parsed:
-                        if len(message) > 19:
+                        datamessage = message[2:-2].strip()[4:]
+                        nack = NegativeAcknowledgement(int(datamessage[2]), int(datamessage[1]), int(datamessage[3:5]))
+                        print('corrupted message')
+                        print(nack.get_message())
+                        nackmessage = ''.join(' ' for _ in range(15 - len(nack.get_message()))) + nack.get_message()
+                        self.datalink_receive_from_network(nackmessage, int(datamessage[1]))
+                        if len(message) >= 19:
                             message = ""
                         continue
-                    
-                    # send to network layer here
-                    # print('dl', i, parsed)
                     self.n.network_receive_from_datalink(parsed, i)
 
                     message = ""

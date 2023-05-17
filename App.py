@@ -103,22 +103,30 @@ n = Node(id, destination, message, starttime, neighbors)
 
 currenttime = 0
 while currenttime < duration:
-    # insert application code here
-    print(f'node {id}: ' + str(currenttime))
+    try:
+        # insert application code here
+        print(f'node {id}: ' + str(currenttime))
 
-    if currenttime % 5 == 0:
-        n.n.generate_link_state_packet()
-        # print(n.n.routes)
-        n.n.link_state_routing()
+        if currenttime % 5 == 0:
+            n.n.generate_link_state_packet()
+            n.n.link_state_routing()
+            print(n.n.nodeneighbors)
+            print(n.n.routes)
 
-    if starttime == currenttime and id != destination and message != "":
-        print(f'node {id} sending message: {message}')
-        n.send_message()
-    
-    n.get_messages()
+        if starttime == currenttime and id != destination and message != "":
+            print(f'node {id} sending message: {message}')
+            n.send_message()
+        
+        n.get_messages()
 
 
-    time.sleep(1)
-    currenttime += 1
-
+        time.sleep(1)
+        currenttime += 1
+    except KeyboardInterrupt:
+        print('\nKeyboard interrupt detected, exiting program.')
+        currenttime = duration
+        for x in range(10):
+            with open(f'./channels/from{id}to{x}.txt', 'w') as channelFile:
+                channelFile.write("")
+            channelFile.close()
 n.output_messages()

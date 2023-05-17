@@ -46,15 +46,11 @@ class Network:
         datalinkmessage = ''.join(' ' for _ in range(15 - len(dm.get_message())))
         datalinkmessage += dm.get_message()
 
-        nodeneighbors = self.nodeneighbors.copy()
-        if dest in self.nodeneighbors.keys():
-            self.datalink.datalink_receive_from_network(datalinkmessage, dest)
-            return
-        for key in nodeneighbors.keys():
-            if dest in nodeneighbors[key]:
-                # print(f'can send through {key}')
-                self.datalink.datalink_receive_from_network(datalinkmessage, key)
-                break
+        sendto = self.routes[dest][1]
+
+        print(f'sending to {dest} via {sendto}')
+        self.datalink.datalink_receive_from_network(datalinkmessage, sendto)
+
     
     # reads message from datalink and sends to transport
     def network_receive_from_datalink(self, message: str, neighbor):
@@ -68,19 +64,20 @@ class Network:
             data = parsedmessage[4:4+length]
 
             if dest == self.id:
+                print(f'received data from {src}: {data}')
                 self.transport.transport_receive_from_network(data, src)
             else:
-                # find best node to send to
-                nodeneighbors = self.nodeneighbors.copy()
+                # find next node to send to
+                sendto = self.routes[dest][1]
 
-                if dest in self.nodeneighbors.keys():
-                    self.datalink.datalink_receive_from_network(message[2:-2], dest)
-                    return
-                for key in nodeneighbors.keys():
-                    if dest in nodeneighbors[key]:
-                        self.datalink.datalink_receive_from_network(message[2:-2], key)
-                        break
+                print(f'sending to {dest} via {sendto}')
+                self.datalink.datalink_receive_from_network(message[2:-2], sendto)
         
+        # if negative acknowledgement
+        if parsedmessage[0] == 'N':
+            print(parsedmessage)
+            self.transport.transport_receive_from_network(parsedmessage, neighbor)
+
         # if link state message
         if parsedmessage[0] == 'L':
             src = int(parsedmessage[1])
@@ -91,7 +88,8 @@ class Network:
             except:
                 neighbors = []
             self.nodeneighbors[src] = neighbors
-            # print(self.nodeneighbors)
+
+            # send to all neighbors except self
             for neighbor in self.neighbors:
                 if neighbor == self.id:
                     continue
